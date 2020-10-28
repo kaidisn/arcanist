@@ -28,7 +28,6 @@ abstract class ArcanistLandEngine
   private $intoLocal;
 
   private $localState;
-  private $hasUnpushedChanges;
   private $pickArgument;
 
   final public function setOntoRemote($onto_remote) {
@@ -237,15 +236,6 @@ abstract class ArcanistLandEngine
 
   final protected function getLocalState() {
     return $this->localState;
-  }
-
-  private function setHasUnpushedChanges($unpushed) {
-    $this->hasUnpushedChanges = $unpushed;
-    return $this;
-  }
-
-  final protected function getHasUnpushedChanges() {
-    return $this->hasUnpushedChanges;
   }
 
   final protected function getOntoConfigurationKey() {
@@ -1244,7 +1234,6 @@ abstract class ArcanistLandEngine
 
         while (true) {
           $into_commit = $this->executeMerge($set, $into_commit);
-          $this->setHasUnpushedChanges(true);
 
           if ($is_hold) {
             $should_push = false;
@@ -1258,7 +1247,6 @@ abstract class ArcanistLandEngine
           if ($should_push) {
             try {
               $this->pushChange($into_commit);
-              $this->setHasUnpushedChanges(false);
             } catch (ArcanistLandPushFailureException $ex) {
 
               // TODO: If the push fails, fetch and retry if the remote ref
